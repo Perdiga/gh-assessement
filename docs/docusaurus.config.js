@@ -1,8 +1,10 @@
 const config = {
   title: "GitHub Enterprise Assessment Framework",
   tagline: "Evidence-driven assessment guidance and versioned control reference",
-  url: "https://example.com",
-  baseUrl: "/",
+  url: "https://perdiga.github.io",
+  baseUrl: process.env.DOCUSAURUS_BASE_URL || "/",
+  organizationName: "Perdiga",
+  projectName: "gh-assessement",
   onBrokenLinks: "throw",
   markdown: {
     hooks: {
