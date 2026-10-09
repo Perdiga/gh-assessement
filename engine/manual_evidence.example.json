@@ -1,14 +1,291 @@
 {
+  "_template_instructions": "Template only. Every control ID present here overrides its automated evaluation. Replace each placeholder with an evidence-backed status and reason, or remove entries that are not being manually assessed, before passing this file to --manual-evidence.",
   "ORG-007": {
-    "status": "PASS",
-    "reason": "All outside collaborators have an approved business owner and ticket."
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Outside collaborators have business justification. Add an evidence source/reference and review date, then set the evidence-backed result."
   },
-  "IAM-004": {
-    "status": "PASS",
-    "reason": "Quarterly access review completed on 2026-09-30; evidence ID IAM-2026-Q3."
+  "IAM-011": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: SSO enforcement is enabled where required. Add an evidence source/reference and review date, then set the evidence-backed result."
   },
-  "DR-006": {
-    "status": "PASS",
-    "reason": "Recovery exercise completed on 2026-09-15 and met the defined RTO."
+  "IAM-014": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Deprovisioned identities are removed promptly. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "IAM-015": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Access reviews are periodic. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "IAM-017": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Inactive accounts are identified. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "IAM-018": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Enterprise-to-org access is documented. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "TEAM-023": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Teams have documented ownership. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "TEAM-026": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Sensitive repositories use dedicated access groups. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "REPO-027": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Repositories have documented ownership. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "REPO-029": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Public repositories have explicit approval. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "REV-053": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Security findings have a defined review path. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "REV-054": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Documentation standards are defined. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "CI-059": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Third-party Actions are governed. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "CI-060": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Actions are pinned appropriately. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "CI-066": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Workflow concurrency is controlled. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "CI-067": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: CI artifacts have retention governance. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "CI-068": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Failed deployments have rollback procedures. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "SEC-076": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Vulnerability alerts have remediation SLAs. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "SEC-077": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Critical dependencies are monitored. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "SEC-078": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: SBOM strategy exists where required. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "SEC-079": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Third-party Actions are pinned and reviewed. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "SEC-080": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Release artifacts are provenance-controlled. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "SEC-081": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Security findings are centrally visible. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "SUP-082": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Shared workflows have clear ownership. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "SUP-083": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Shared workflows have versioning strategy. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "SUP-084": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Shared Actions have contribution guidelines. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "SUP-085": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Reusable components are discoverable. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "SUP-086": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Shared workflows are security-reviewed. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "SUP-087": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Shared workflows have lifecycle/deprecation policy. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "SUP-088": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Common CI patterns are standardized. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "SUP-089": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Shared components have adoption metrics. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "OPS-091": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Audit logs are retained according to policy. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "OPS-092": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Audit logs are forwarded to monitoring/SIEM where required. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "OPS-093": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Administrative events are monitored. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "OPS-094": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Authentication events are monitored. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "OPS-095": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Repository permission changes are monitored. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "OPS-096": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Actions security events are monitored. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "OPS-097": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Security alerts are monitored. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "OPS-098": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: CI/CD reliability metrics are tracked. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "OPS-099": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: SLO/SLA exists for critical delivery pipelines. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "DR-100": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Critical repositories have an independent recovery strategy. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "DR-101": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Recovery source is independent of primary failure domain. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "DR-102": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Break-glass responders are identified. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "DR-103": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Recovery credentials are independently available. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "DR-104": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Recovery procedures are documented. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "DR-105": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Recovery procedures are tested periodically. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "DR-106": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: RPO is defined for critical repositories. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "DR-107": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: RTO is defined for critical repositories. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "DR-108": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Mirror freshness is monitored. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "DR-109": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Recovery changes are reconciled after incidents. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "PROD-111": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Standard workflows are available. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "PROD-112": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: New repositories receive baseline controls. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "PROD-113": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Developer onboarding is documented. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "PROD-114": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Engineering standards are discoverable. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "PROD-115": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Common automation is reusable. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "PROD-116": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Developer feedback channels exist. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "PROD-117": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Engineering productivity metrics are reviewed. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "GRC-118": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Exceptions have owner, rationale and expiry. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "GRC-119": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Risk acceptance is documented. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "GRC-120": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Controls are periodically reassessed. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "GRC-121": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Policy ownership is explicit. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "GRC-122": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Regulatory requirements are mapped to controls. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "GRC-123": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Evidence is reproducible and timestamped. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "GRC-124": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: NOT ASSESSED findings are tracked. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "GRC-125": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Critical findings have remediation owners. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "COST-126": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: GitHub resource usage is attributable. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "COST-127": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: AI usage is attributable where applicable. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "COST-128": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: AI budgets are defined where applicable. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "COST-129": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: AI credit consumption anomalies are monitored. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "COST-130": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Actions compute usage is reviewed. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "COST-131": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Self-hosted runner capacity is governed. Add an evidence source/reference and review date, then set the evidence-backed result."
+  },
+  "COST-132": {
+    "status": "NOT ASSESSED",
+    "reason": "Template placeholder: review evidence for the requirement: Repository/archive costs are reviewed. Add an evidence source/reference and review date, then set the evidence-backed result."
   }
 }

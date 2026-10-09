@@ -142,6 +142,11 @@ def _assessment_blocker_classify(control, evidence, status, reason, quality, man
                 "detail":"The endpoint responded, but required control fields are unavailable or null.",
                 "sources":sorted({x.get("source") for x in field_states if x.get("source")})}
 
+    if control.get("automation", {}).get("mode") == "manual_or_hybrid":
+        return {"category":"MANUAL_EVIDENCE_REQUIRED",
+                "detail":"This hybrid control can use manual evidence when its automated evidence source is unavailable or insufficient.",
+                "sources":sources}
+
     if any(x.get("availability")=="ENDPOINT_UNAVAILABLE" and x.get("reason") not in ("source is not collected or mapped", "permission_denied", "access_denied") for x in states):
         return {"category":"ENDPOINT_UNAVAILABLE",
                 "detail":"A required evidence endpoint is unavailable or returned an unresolved API/transport error.",

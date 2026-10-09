@@ -35,6 +35,10 @@ def yaml_string(value: str) -> str:
     return json.dumps(value, ensure_ascii=False)
 
 
+def table_cell(value: Any) -> str:
+    return text(value, "—").replace("|", "\\|").replace("\n", " ")
+
+
 def versioned_catalogs() -> list[tuple[str, Path]]:
     catalogs = []
     for directory in CATALOG_ROOT.iterdir():
@@ -187,6 +191,61 @@ def generate_version(version: str, catalog_path: Path) -> tuple[int, Path]:
     return len(controls), index_path
 
 
+def generate_latest_overview() -> tuple[str, int]:
+    catalog_path = CATALOG_ROOT / "latest" / "github_controls.json"
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    version = str(catalog.get("version", ""))
+    controls = catalog.get("controls")
+    if not isinstance(controls, list):
+        raise ValueError(f"Catalog {catalog_path} does not contain a controls list.")
+
+    mode_labels = {
+        "automated": "Automated",
+        "manual_or_hybrid": "Manual or hybrid",
+    }
+    mode_counts = Counter(
+        control.get("automation", {}).get("mode", "unspecified")
+        for control in controls
+    )
+    lines = [
+        "---",
+        'id: "latest"',
+        'title: "Latest controls"',
+        "sidebar_position: 1",
+        "---",
+        "",
+        "# Latest controls",
+        "",
+        f"Current catalog version: **{version}** ({len(controls)} controls).",
+        "",
+        f"Automation coverage: **{mode_counts['automated']} automated** and **{mode_counts['manual_or_hybrid']} manual or hybrid**.",
+        "",
+        "Select a control ID to open its detailed, version-specific reference page.",
+        "",
+        "| Control ID | Domain | Name | Maturity state | Automation mode |",
+        "| --- | --- | --- | --- | --- |",
+    ]
+
+    for control in controls:
+        control_id = str(control["control_id"])
+        domain = str(control.get("domain", "Uncategorized"))
+        domain_slug = slugify(domain) or "uncategorized"
+        title = table_cell(control.get("title", control_id))
+        stage = table_cell(control.get("well_architected_stage", "Not assigned"))
+        mode = control.get("automation", {}).get("mode", "unspecified")
+        mode_label = mode_labels.get(mode, f"Unspecified ({mode})")
+        lines.append(
+            f"| [{table_cell(control_id)}](/controls/{version}/{domain_slug}/{control_id})"
+            f" | {table_cell(domain)} | {title} | {stage} | {table_cell(mode_label)} |"
+        )
+
+    lines.append("")
+    output_path = DOCS_ROOT / "controls" / "latest.md"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text("\n".join(lines), encoding="utf-8")
+    return version, len(controls)
+
+
 def main() -> None:
     catalogs = versioned_catalogs()
     if not catalogs:
@@ -197,6 +256,7 @@ def main() -> None:
         count, _ = generate_version(version, catalog_path)
         versions.append((version, count))
 
+    latest_version, latest_count = generate_latest_overview()
     index_lines = [
         "---",
         "id: controls",
@@ -210,6 +270,7 @@ def main() -> None:
         "",
         "`catalogs/latest/github_controls.json` is an alias to the current catalog and is not generated as a second documentation version.",
         "",
+        f"- [Latest controls](/controls/latest) - version {latest_version}, {latest_count} controls",
     ]
     for version, count in versions:
         index_lines.append(f"- [Version {version}](/controls/{version}) - {count} controls")

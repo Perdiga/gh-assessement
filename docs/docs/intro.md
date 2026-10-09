@@ -26,4 +26,4 @@ The assessment is read-only. It gathers organization and repository configuratio
 
 ## Current catalog
 
-The current catalog version is **1.1.2**, containing 132 controls. Pages are generated from `catalogs/1.1.2/github_controls.json`; `catalogs/latest/github_controls.json` is the current alias. Historical catalog versions remain under their own versioned paths.
+The current catalog version is **1.1.3**, containing 132 controls. Pages are generated from `catalogs/1.1.3/github_controls.json`; `catalogs/latest/github_controls.json` is the current alias. Historical catalog versions remain under their own versioned paths.

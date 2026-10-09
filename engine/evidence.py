@@ -314,6 +314,8 @@ def evidence_field_states(control, evidence):
         field=evdef.get("field")
         if not source:
             continue
+        if not source.startswith("GET ") and source_registry_entry(source) is None:
+            continue
 
         if source.startswith("GET /repos/{owner}/{repo}"):
             states.extend(_repo_field_states(evidence,source,field))
@@ -343,7 +345,10 @@ def evidence_field_states(control, evidence):
                 aliases={"archive":"archived"}
                 effective_fields=[aliases.get(x,x) for x in _field_names(field)]
                 missing_count=sum(1 for row in items if not all(_has_field(row,x) for x in effective_fields))
-                states.append({"source":source,"field":field,"availability":"FIELD_UNAVAILABLE" if missing_count else "AVAILABLE","population":len(items),"rows_missing_fields":missing_count})
+                state={"source":source,"field":field,"availability":"FIELD_UNAVAILABLE" if missing_count else "AVAILABLE","population":len(items),"rows_missing_fields":missing_count}
+                if item.get("derived_from"):
+                    state["derived_from"] = item["derived_from"]
+                states.append(state)
             continue
         states.append({"source":source,"field":field,"availability":"FIELD_UNAVAILABLE","reason":"required field could not be resolved"})
     return states

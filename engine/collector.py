@@ -8,6 +8,81 @@ from github_client import API_VERSION, GH, api_result, body, ruleset_diagnostic
 LOG = logging.getLogger("github_assessment")
 
 
+def derive_outside_collaborators(evidence):
+    """Derive a complete outsider inventory when the org endpoint is unavailable."""
+    if evidence.get("outside_collaborators", {}).get("status") == 200:
+        return False
+
+    authentication = evidence.get("metadata", {}).get("authentication", {})
+    if (
+        authentication.get("type") != "github_app_installation"
+        or authentication.get("repository_selection") != "installation_default"
+    ):
+        return False
+
+    members = evidence.get("members", {})
+    repositories = evidence.get("repositories", {})
+    if (
+        members.get("status") != 200
+        or not isinstance(members.get("items"), list)
+        or repositories.get("status") != 200
+        or not isinstance(repositories.get("items"), list)
+    ):
+        return False
+
+    member_logins = set()
+    for member in members["items"]:
+        login = member.get("login") if isinstance(member, dict) else None
+        if not login:
+            return False
+        member_logins.add(login.casefold())
+
+    repository_names: set[str] = set()
+    for repository in repositories["items"]:
+        full_name = repository.get("full_name") if isinstance(repository, dict) else None
+        if not isinstance(full_name, str) or not full_name:
+            return False
+        repository_names.add(full_name)
+    if len(repository_names) != len(repositories["items"]):
+        return False
+
+    repository_collaborators = evidence.get("repository_collaborator_evidence", {})
+    if set(repository_collaborators) != repository_names:
+        return False
+
+    outsiders = {}
+    for repository_name in sorted(repository_names):
+        result = repository_collaborators[repository_name]
+        collaborators = result.get("items", result.get("data"))
+        if result.get("status") != 200 or not isinstance(collaborators, list):
+            return False
+        for collaborator in collaborators:
+            login = collaborator.get("login") if isinstance(collaborator, dict) else None
+            if not login:
+                return False
+            if login.casefold() not in member_logins:
+                outsiders.setdefault(login.casefold(), collaborator)
+
+    evidence["outside_collaborators"] = {
+        "status": 200,
+        "items": sorted(outsiders.values(), key=lambda collaborator: collaborator["login"].casefold()),
+        "evidence": {
+            "availability": "AVAILABLE",
+            "reason": "derived_from_complete_repository_collaborator_inventory",
+        },
+        "derived_from": [
+            "GET /orgs/{org}/members",
+            "GET /repos/{owner}/{repo}/collaborators?affiliation=direct",
+        ],
+        "original_endpoint": evidence.get("outside_collaborators", {}),
+    }
+    LOG.info(
+        "Derived outside-collaborator inventory from complete member and repository collaborator evidence: %s",
+        len(outsiders),
+    )
+    return True
+
+
 def collect(token, org, auth_metadata=None):
     started = time.monotonic()
     github = GH(token, auth_metadata)
@@ -235,6 +310,8 @@ def collect(token, org, auth_metadata=None):
         evidence["repository_collaborator_evidence"][full_name] = collaborator_evidence
         if index == 1 or index % 10 == 0 or index == len(repositories):
             LOG.info("[COLLAB] %s/%s repositories processed", index, len(repositories))
+
+    derive_outside_collaborators(evidence)
 
     LOG.info(
         "Assessment collection finished: repositories=%s teams=%s elapsed=%.1fs",
