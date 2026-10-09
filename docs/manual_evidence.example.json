@@ -1,0 +1,14 @@
+{
+  "ORG-007": {
+    "status": "PASS",
+    "reason": "All outside collaborators have an approved business owner and ticket."
+  },
+  "IAM-004": {
+    "status": "PASS",
+    "reason": "Quarterly access review completed on 2026-09-30; evidence ID IAM-2026-Q3."
+  },
+  "DR-006": {
+    "status": "PASS",
+    "reason": "Recovery exercise completed on 2026-09-15 and met the defined RTO."
+  }
+}

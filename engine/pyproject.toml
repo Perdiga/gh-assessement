@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "github-enterprise-assessment-framework"
+version = "1.8.1"
+description = "Read-only, evidence-driven GitHub Enterprise assessment framework aligned with GitHub Well-Architected"
+requires-python = ">=3.10"
+dependencies = ["requests>=2.32.0,<3.0.0", "PyJWT>=2.10.1,<3.0.0", "cryptography>=44.0.0,<47.0.0", "python-dotenv>=1.0.1,<2.0.0"]
+
+[project.scripts]
+github-enterprise-assessment = "main:main"
