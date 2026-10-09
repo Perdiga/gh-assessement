@@ -1,0 +1,229 @@
+#!/usr/bin/env python3
+"""Generate versioned Docusaurus control references from catalog JSON files."""
+
+from __future__ import annotations
+
+import json
+import re
+from collections import Counter
+from pathlib import Path
+from typing import Any
+
+REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
+CATALOG_ROOT = REPOSITORY_ROOT / "catalogs"
+DOCS_ROOT = Path(__file__).resolve().parents[1] / "docs"
+
+
+def text(value: Any, fallback: str = "Not specified in this catalog.") -> str:
+    if value is None or value == "":
+        return fallback
+    if isinstance(value, (dict, list)):
+        value = json.dumps(value, ensure_ascii=False)
+    return str(value).replace("\r\n", "\n").replace("\r", "\n").replace("{", "&#123;").replace("}", "&#125;").strip()
+
+
+def code(value: Any, fallback: str = "Not specified") -> str:
+    value = text(value, fallback).replace("`", "&#96;").replace("\n", " ")
+    return f"`{value}`"
+
+
+def slugify(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
+
+
+def yaml_string(value: str) -> str:
+    return json.dumps(value, ensure_ascii=False)
+
+
+def versioned_catalogs() -> list[tuple[str, Path]]:
+    catalogs = []
+    for directory in CATALOG_ROOT.iterdir():
+        if not directory.is_dir() or directory.name == "latest":
+            continue
+        if not re.fullmatch(r"\d+(?:\.\d+)*", directory.name):
+            continue
+        catalog_path = directory / "github_controls.json"
+        if catalog_path.is_file():
+            catalogs.append((directory.name, catalog_path))
+    return sorted(catalogs, key=lambda item: tuple(int(part) for part in item[0].split(".")))
+
+
+def evidence_markdown(control: dict[str, Any]) -> str:
+    evidence = control.get("evidence", [])
+    if not evidence:
+        return "No evidence sources are declared in this catalog entry."
+
+    lines = []
+    for source in evidence:
+        lines.append(f"- **Source:** {code(source.get('source'))}")
+        fields = source.get("field", source.get("fields"))
+        if fields:
+            lines.append(f"  - **Fields:** {code(fields)}")
+        if source.get("key"):
+            lines.append(f"  - **Evidence key:** {code(source['key'])}")
+    return "\n".join(lines)
+
+
+def control_page(version: str, control: dict[str, Any], position: int) -> str:
+    control_id = control["control_id"]
+    title = f"{control_id}: {control.get('title', control_id)}"
+    domain = control.get("domain", "Uncategorized")
+    automation = control.get("automation") or {}
+    mappings = control.get("well_architected_mapping", [])
+    mapping_text = ", ".join(text(item) for item in mappings) if mappings else "Not mapped in this catalog."
+    header = [
+        "---",
+        f"id: {control_id}",
+        f"title: {yaml_string(title)}",
+        f"sidebar_label: {yaml_string(control_id)}",
+        f"sidebar_position: {position}",
+        "---",
+        "",
+        f"# {title}",
+        "",
+        f"**Catalog version:** {version}  ",
+        f"**Domain:** {text(domain)}  ",
+        f"**Severity:** {text(control.get('severity'))}  ",
+        f"**Maturity stage:** {text(control.get('well_architected_stage'))}  ",
+        f"**Well-Architected mapping:** {mapping_text}",
+        "",
+        "## Objective",
+        "",
+        text(control.get("objective")),
+        "",
+        "## Requirement",
+        "",
+        text(control.get("requirement")),
+        "",
+        "## Risk",
+        "",
+        text(control.get("risk")),
+        "",
+        "## Evidence sources",
+        "",
+        evidence_markdown(control),
+        "",
+        "## Evaluation logic",
+        "",
+        f"**Mode:** {code(automation.get('mode'))}",
+        "",
+        text(automation.get("logic")),
+        "",
+        "## Expected result",
+        "",
+        text(control.get("expected_result")),
+        "",
+        "## Exception criteria",
+        "",
+        text(control.get("exception_criteria")),
+        "",
+        "## Remediation guidance",
+        "",
+        text(control.get("remediation")),
+        "",
+        "## Maturity-stage basis",
+        "",
+        text(control.get("maturity_basis")),
+        "",
+        f"[Back to catalog version {version}](/controls/{version})",
+        "",
+    ]
+    return "\n".join(header)
+
+
+def generate_version(version: str, catalog_path: Path) -> tuple[int, Path]:
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    catalog_version = str(catalog.get("version", ""))
+    if catalog_version != version:
+        raise ValueError(
+            f"Catalog folder {version} contains catalog version {catalog_version!r}."
+        )
+
+    controls = catalog.get("controls")
+    if not isinstance(controls, list):
+        raise ValueError(f"Catalog {catalog_path} does not contain a controls list.")
+
+    version_root = DOCS_ROOT / "controls" / version
+    version_root.mkdir(parents=True, exist_ok=True)
+    domain_counts = Counter(control.get("domain", "Uncategorized") for control in controls)
+    control_links: dict[str, list[str]] = {}
+    domain_positions: Counter[str] = Counter()
+
+    for control in controls:
+        control_id = control["control_id"]
+        domain = control.get("domain", "Uncategorized")
+        domain_slug = slugify(domain) or "uncategorized"
+        domain_positions[domain] += 1
+        page_path = version_root / domain_slug / f"{control_id}.md"
+        page_path.parent.mkdir(parents=True, exist_ok=True)
+        page_path.write_text(
+            control_page(version, control, domain_positions[domain]),
+            encoding="utf-8",
+        )
+        control_links.setdefault(domain, []).append(
+            f"- [{control_id}: {text(control.get('title', control_id))}]"
+            f"(./{domain_slug}/{control_id})"
+        )
+
+    index_lines = [
+        "---",
+        f"id: {version}",
+        f"title: {yaml_string(f'Control catalog {version}')}",
+        "sidebar_position: 1",
+        "---",
+        "",
+        f"# Control catalog {version}",
+        "",
+        f"This reference contains {len(controls)} controls generated from `catalogs/{version}/github_controls.json`.",
+        "",
+        "Control content is generated from the versioned JSON catalog. After adding or updating a catalog, regenerate pages by running `npm run docs:generate` from the `docs/` directory.",
+        "",
+    ]
+    for domain in sorted(control_links):
+        index_lines.extend([f"## {text(domain)}", "", *control_links[domain], ""])
+
+    index_path = version_root / "index.md"
+    index_path.write_text("\n".join(index_lines), encoding="utf-8")
+    return len(controls), index_path
+
+
+def main() -> None:
+    catalogs = versioned_catalogs()
+    if not catalogs:
+        raise SystemExit(f"No versioned catalogs found under {CATALOG_ROOT}.")
+
+    versions = []
+    for version, catalog_path in catalogs:
+        count, _ = generate_version(version, catalog_path)
+        versions.append((version, count))
+
+    index_lines = [
+        "---",
+        "id: controls",
+        'title: "Versioned control catalog"',
+        "sidebar_position: 4",
+        "---",
+        "",
+        "# Versioned control catalog",
+        "",
+        "Browse controls by the catalog version used to define and evaluate them. Each version has its own reference pages; older definitions remain available when new catalog versions are added.",
+        "",
+        "`catalogs/latest/github_controls.json` is an alias to the current catalog and is not generated as a second documentation version.",
+        "",
+    ]
+    for version, count in versions:
+        index_lines.append(f"- [Version {version}](/controls/{version}) - {count} controls")
+    index_lines.append("")
+
+    controls_index = DOCS_ROOT / "controls" / "index.md"
+    controls_index.parent.mkdir(parents=True, exist_ok=True)
+    controls_index.write_text("\n".join(index_lines), encoding="utf-8")
+
+    total = sum(count for _, count in versions)
+    print(f"Generated {total} control pages across {len(versions)} catalog version(s).")
+    for version, count in versions:
+        print(f"  {version}: {count} controls")
+
+
+if __name__ == "__main__":
+    main()

@@ -108,9 +108,7 @@ def write_markdown_report(
     findings_for_report.sort(key=lambda f:(status_order.get(f["status"],9), {"critical":0,"high":1,"medium":2,"low":3,"informational":4}.get(f["severity"],9), f["control_id"]))
 
     md=[
-        f"# GitHub Enterprise Assessment Framework — {args.org}",
-        "",
-        "> Production assessment report generated from the read-only GitHub assessment engine.",
+        f"# GitHub Enterprise Assessment — {args.org}", 
         "",
         "## Summary",
         "",
@@ -129,11 +127,10 @@ def write_markdown_report(
         ("Organization",args.org),
         ("Overall score",overall if overall is not None else "N/A"),
         ("Controls",f"{total_controls}"),
-        ("Scored controls",f"{scored_count}/{total_controls}"),
+        ("Passed",f"{scored_count}"),
         ("Failures",result["summary"]["failures"]),
         ("Critical failures",critical_fail),
         ("Not assessed",result["summary"]["not_assessed"]),
-        ("Permission audit",auth_permission_audit.get("status","UNKNOWN")),
     ])
 
     md += ["","## Technical Information","",]
@@ -142,10 +139,7 @@ def write_markdown_report(
         ("Execution date",evidence["metadata"].get("collected_at","N/A")),
         ("Authentication method",(auth_metadata or {}).get("type","token")),
         ("Engine version",ENGINE_VERSION),
-        ("Framework version",catalog.get("version","N/A")),
-        ("GitHub API version",evidence["metadata"].get("api_version","N/A")),
-        ("Assessment principal",(auth_metadata or {}).get("type","token")),
-        ("Permission posture","Read-only" if auth_permission_audit.get("read_only_assessment") else "Review required"),
+        ("Controls version",catalog.get("version","N/A")),
     ])
 
     md += ["","## Methodology","",
@@ -172,8 +166,6 @@ def write_markdown_report(
         "",
         "A domain reaches **Start** only when all controls assigned to Start are PASS or N/A. It reaches **Mature** only when all Start and Mature controls are PASS or N/A. It reaches **Advance** only when all Start, Mature and Advance controls are PASS or N/A. PARTIAL, FAIL and NOT ASSESSED block the corresponding stage.",
         "",
-        "Numeric control scores remain available as a separate diagnostic metric, but they no longer determine maturity. Domains with insufficient evidence coverage are marked **provisional**.",
-        "",
         "### GitHub Well-Architected progression",
         "",
         "**Start** establishes foundational practices and understanding of the current state. **Mature** establishes standardized, governed and repeatable practices. **Advance** emphasizes implementation at scale, automation, optimization, continuous improvement, resilience or other advanced practices depending on the Design Principle.",
@@ -187,9 +179,9 @@ def write_markdown_report(
     ]
 
     md += ["","## Domain Maturity","",
-           "Domain maturity is expressed using the GitHub Well-Architected **Start / Mature / Advance** terminology. Maturity is determined by achievement of the control stages in the catalog, not by the numeric score. The **Score** remains a diagnostic metric and **Coverage** shows how much of the domain had a scored result.","",
+           "Domain maturity is expressed using the GitHub Well-Architected **Start / Mature / Advance** terminology. Maturity is determined by achievement of the control stages in the catalog.","",
     ]
-    md += md_table([("Domain","Stage","Score","Scored","Coverage","Basis")]+maturity_rows)
+    md += md_table([("Domain","Stage","Scored","Coverage","Basis")]+maturity_rows)
     md += ["", "### Stage progression and blockers", "", "The following controls determine the next maturity stage. A control blocks stage achievement when its status is FAIL, PARTIAL or NOT ASSESSED.", ""]
     for d in domains:
         md += [f"#### {d}", ""]

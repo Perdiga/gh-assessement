@@ -1,0 +1,57 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
+
+:root {
+  --ifm-color-primary: #087f64;
+  --ifm-color-primary-dark: #07725a;
+  --ifm-color-primary-darker: #066b55;
+  --ifm-color-primary-darkest: #055844;
+  --ifm-color-primary-light: #098c6e;
+  --ifm-color-primary-lighter: #0a9373;
+  --ifm-color-primary-lightest: #0ca985;
+  --ifm-font-family-base: "IBM Plex Sans", "Avenir Next", sans-serif;
+  --ifm-font-family-monospace: "IBM Plex Mono", monospace;
+  --ifm-background-color: #f7f8f5;
+  --ifm-navbar-background-color: #ffffff;
+  --ifm-footer-background-color: #eef2ed;
+  --ifm-code-font-size: 90%;
+  --ifm-heading-font-weight: 600;
+}
+
+[data-theme="dark"] {
+  --ifm-color-primary: #5cc8a7;
+  --ifm-color-primary-dark: #42bf99;
+  --ifm-color-primary-darker: #34b98f;
+  --ifm-color-primary-darkest: #269878;
+  --ifm-color-primary-light: #76d1b5;
+  --ifm-color-primary-lighter: #84d7bd;
+  --ifm-color-primary-lightest: #a9e4d2;
+  --ifm-background-color: #151b19;
+  --ifm-navbar-background-color: #1a221f;
+  --ifm-footer-background-color: #1a221f;
+}
+
+.navbar {
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  box-shadow: none;
+}
+
+.navbar__title {
+  font-size: 0.96rem;
+}
+
+.markdown h1 {
+  --ifm-h1-font-size: 2.35rem;
+}
+
+.markdown h2 {
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  padding-bottom: 0.35rem;
+}
+
+.markdown code {
+  border-radius: 3px;
+}
+
+.menu__link {
+  font-size: 0.92rem;
+}
