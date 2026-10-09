@@ -37,6 +37,15 @@ Significant governance, security or operational exposure.
 
 Evaluate collected evidence for `visibility` against the stated requirement; distinguish missing evidence from a failing control.
 
+### Example evaluation
+
+This is the corresponding branch from the assessment engine; shared helpers resolve the collected evidence and aggregate repository results.
+
+```python
+if cid=="REPO-028":
+    return aggregate(lambda r:r.get("visibility") in ("private","internal","public"))
+```
+
 ## Expected result
 
 PASS when the requirement is demonstrably satisfied; PARTIAL when implementation is incomplete; FAIL when materially absent; NOT ASSESSED when evidence is unavailable; N/A only with documented rationale.

@@ -3,10 +3,12 @@
 
 from __future__ import annotations
 
+import ast
 import json
 import re
 from collections import Counter
 from pathlib import Path
+from textwrap import dedent
 from typing import Any
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
@@ -68,6 +70,47 @@ def evidence_markdown(control: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def automated_evaluation_example(control_id: str) -> str:
+    """Return the actual assess() branch used to evaluate an automated control."""
+    assessment_path = REPOSITORY_ROOT / "engine" / "assessment.py"
+    source = assessment_path.read_text(encoding="utf-8")
+    tree = ast.parse(source, filename=str(assessment_path))
+    assess_function = next(
+        node
+        for node in tree.body
+        if isinstance(node, ast.FunctionDef) and node.name == "assess"
+    )
+
+    def matches_control(test: ast.expr) -> bool:
+        for node in ast.walk(test):
+            if not isinstance(node, ast.Compare) or not isinstance(node.left, ast.Name):
+                continue
+            if node.left.id != "cid" or len(node.ops) != 1 or len(node.comparators) != 1:
+                continue
+            operator = node.ops[0]
+            comparator = node.comparators[0]
+            if isinstance(operator, ast.Eq):
+                return isinstance(comparator, ast.Constant) and comparator.value == control_id
+            if isinstance(operator, ast.In) and isinstance(comparator, (ast.Tuple, ast.List, ast.Set)):
+                return any(
+                    isinstance(item, ast.Constant) and item.value == control_id
+                    for item in comparator.elts
+                )
+        return False
+
+    for statement in assess_function.body:
+        if isinstance(statement, ast.If) and matches_control(statement.test):
+            branch = dedent(ast.get_source_segment(source, statement) or "").rstrip()
+            return "\n".join(
+                line[4:] if line.startswith("    ") else line
+                for line in branch.splitlines()
+            )
+
+    raise ValueError(
+        f"Automated control {control_id} has no matching branch in {assessment_path}."
+    )
+
+
 def control_page(version: str, control: dict[str, Any], position: int) -> str:
     control_id = control["control_id"]
     title = f"{control_id}: {control.get('title', control_id)}"
@@ -75,7 +118,7 @@ def control_page(version: str, control: dict[str, Any], position: int) -> str:
     automation = control.get("automation") or {}
     mappings = control.get("well_architected_mapping", [])
     mapping_text = ", ".join(text(item) for item in mappings) if mappings else "Not mapped in this catalog."
-    header = [
+    page = [
         "---",
         f"id: {control_id}",
         f"title: {yaml_string(title)}",
@@ -112,6 +155,24 @@ def control_page(version: str, control: dict[str, Any], position: int) -> str:
         f"**Mode:** {code(automation.get('mode'))}",
         "",
         text(automation.get("logic")),
+    ]
+
+    if automation.get("mode") == "automated":
+        page.extend(
+            [
+                "",
+                "### Example evaluation",
+                "",
+                "This is the corresponding branch from the assessment engine; shared helpers resolve the collected evidence and aggregate repository results.",
+                "",
+                "```python",
+                automated_evaluation_example(control_id),
+                "```",
+            ]
+        )
+
+    page.extend(
+        [
         "",
         "## Expected result",
         "",
@@ -131,8 +192,9 @@ def control_page(version: str, control: dict[str, Any], position: int) -> str:
         "",
         f"[Back to catalog version {version}](/controls/{version})",
         "",
-    ]
-    return "\n".join(header)
+        ]
+    )
+    return "\n".join(page)
 
 
 def generate_version(version: str, catalog_path: Path) -> tuple[int, Path]:

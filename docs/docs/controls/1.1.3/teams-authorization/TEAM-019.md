@@ -37,6 +37,22 @@ Meaningful control weakness requiring planned remediation.
 
 Evaluate collected evidence for `permissions` against the stated requirement; distinguish missing evidence from a failing control.
 
+### Example evaluation
+
+This is the corresponding branch from the assessment engine; shared helpers resolve the collected evidence and aggregate repository results.
+
+```python
+if cid=="TEAM-019":
+    x=ev.get("team_repository_evidence",{})
+    if not x:return "NOT ASSESSED","Team repository permission evidence unavailable."
+    direct_admins=0
+    total_team_repo=0
+    for d in x.values():
+        for repo in d.get("data",{}).get("items",[]) if isinstance(d.get("data"),dict) else []:
+            total_team_repo+=1
+    return ("PASS" if total_team_repo else "PARTIAL"),f"team-repository assignments observed={total_team_repo}"
+```
+
 ## Expected result
 
 PASS when the requirement is demonstrably satisfied; PARTIAL when implementation is incomplete; FAIL when materially absent; NOT ASSESSED when evidence is unavailable; N/A only with documented rationale.

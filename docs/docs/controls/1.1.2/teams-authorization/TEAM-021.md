@@ -37,6 +37,16 @@ Meaningful control weakness requiring planned remediation.
 
 Evaluate collected evidence for `role` against the stated requirement; distinguish missing evidence from a failing control.
 
+### Example evaluation
+
+This is the corresponding branch from the assessment engine; shared helpers resolve the collected evidence and aggregate repository results.
+
+```python
+if cid=="TEAM-021":
+    maintainers=sum(1 for t in teams if t.get("members_count",0)>0 and t.get("permission")=="maintain")
+    return "INFO",f"team_maintainer_evidence={maintainers}"
+```
+
 ## Expected result
 
 PASS when the requirement is demonstrably satisfied; PARTIAL when implementation is incomplete; FAIL when materially absent; NOT ASSESSED when evidence is unavailable; N/A only with documented rationale.

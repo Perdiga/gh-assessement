@@ -37,6 +37,16 @@ Meaningful control weakness requiring planned remediation.
 
 Evaluate collected evidence for `is_template` against the stated requirement; distinguish missing evidence from a failing control.
 
+### Example evaluation
+
+This is the corresponding branch from the assessment engine; shared helpers resolve the collected evidence and aggregate repository results.
+
+```python
+if cid=="REPO-034":
+    templates=sum(1 for r in repos if r.get("is_template"))
+    return "INFO",f"template_repositories={templates}"
+```
+
 ## Expected result
 
 PASS when the requirement is demonstrably satisfied; PARTIAL when implementation is incomplete; FAIL when materially absent; NOT ASSESSED when evidence is unavailable; N/A only with documented rationale.

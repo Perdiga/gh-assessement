@@ -37,6 +37,18 @@ Hygiene or optimization opportunity.
 
 Evaluate collected evidence for `members_count,repos_count` against the stated requirement; distinguish missing evidence from a failing control.
 
+### Example evaluation
+
+This is the corresponding branch from the assessment engine; shared helpers resolve the collected evidence and aggregate repository results.
+
+```python
+if cid=="TEAM-024":
+    if not org_evidence_available("teams"):
+        return "NOT ASSESSED",f"teams_http_status={ev.get('teams',{}).get('status')}"
+    empty=sum(1 for t in teams if t.get("members_count",0)==0)
+    return ("PASS" if empty==0 else "PARTIAL"),f"empty_teams={empty}"
+```
+
 ## Expected result
 
 PASS when the requirement is demonstrably satisfied; PARTIAL when implementation is incomplete; FAIL when materially absent; NOT ASSESSED when evidence is unavailable; N/A only with documented rationale.
