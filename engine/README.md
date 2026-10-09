@@ -51,6 +51,14 @@ Self-check:
 python main.py --self-check
 ```
 
+## Engine modules
+
+- `main.py` — command-line options and assessment orchestration.
+- `github_client.py` — GitHub REST access, authentication, and response handling.
+- `collector.py` — organization and repository evidence collection.
+- `evidence.py` — source mapping, evidence quality, and coverage.
+- `assessment.py` — control evaluation, blockers, and scoring.
+- `reporting.py` — permission manifests and Markdown report rendering.
 
 ## Maturity progression
 
